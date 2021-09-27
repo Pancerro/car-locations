@@ -1,0 +1,21 @@
+.home-container {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 60vh;
+  .navigate-btn {
+    background-color: black;
+    font-size: 20px;
+    border: 1px lightgray solid;
+    border-radius: 4px;
+    width: 100px;
+    height: 20px;
+    padding: 10px;
+  }
+  .navigate-btn:hover {
+    cursor: pointer;
+    filter: brightness(50%)  }
+}

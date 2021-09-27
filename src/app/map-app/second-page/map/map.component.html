@@ -1,0 +1,134 @@
+<div class="map-container">
+  <div class="btn-open-filter" *ngIf = "closeFilter">
+    <div (click)="closeFilters()">Open filters</div>
+  </div>
+    <div *ngIf="!closeFilter" class="form-container">
+      <div class="btn-close" (click)="closeFilters()">x</div>
+      <h1>Filters:</h1>
+      <form [formGroup]="searchForm" (keydown.enter)="search()">
+        <div class="form-input">
+          <span>Car name: </span>
+          <label>
+            <input type="text" name="name" formControlName="car-name">
+          </label>
+        </div>
+        <div class="form-input">
+          <span>Car color: </span>
+          <label>
+            <input type="text" name="name" formControlName="car-color">
+          </label>
+        </div>
+        <div class="form-input">
+          <span>Car type: </span>
+          <label>
+            <select name="cars" formControlName="car-type">
+              <option class="option" value="car">Car</option>
+              <option class="option" value="truck">Truck </option>
+            </select>
+          </label>
+        </div>
+        <div class="form-input">
+          <div>Car range (km): </div>
+          <div class="input-container">
+            <label>
+              <input placeholder="Min Car Range" type="number" min="0"  name="name" formControlName="min-car-range">
+            </label>
+          </div>
+          <div class="input-container">
+            <label>
+              <input placeholder="Max Car Range" type="number"  min="0" name="name" formControlName="max-car-range">
+            </label>
+          </div>
+          <div class="error" *ngIf="(searchForm.get('max-car-range')?.touched && searchForm.get('max-car-range')?.dirty && searchForm.get('min-car-range')?.touched && searchForm.get('min-car-range')?.dirty) && searchForm.get('max-car-range')?.value < searchForm.get('min-car-range')?.value">
+            Min car range > Max car range
+          </div>
+          <div class="error" *ngIf="(searchForm.get('min-car-range')?.dirty && searchForm.get('min-car-range')?.touched) && searchForm.get('min-car-range')?.value < 0">
+            Min car range < 0
+          </div>
+          <div class="error" *ngIf="(searchForm.get('max-car-range')?.dirty && searchForm.get('max-car-range')?.touched) && searchForm.get('max-car-range')?.value < 0">
+            Max car range < 0
+          </div>
+        </div>
+        <div class="form-input">
+          <div>Car battery level: </div>
+          <div class="input-container">
+            <label>
+              <input placeholder="Min battery" type="number" min="0" max="100" name="name" formControlName="min-car-battery">
+            </label>
+          </div>
+          <div class="input-container">
+            <label>
+              <input placeholder="Max battery" type="number"  min="0" max="100" name="name" formControlName="max-car-battery">
+            </label>
+          </div>
+          <div class="error" *ngIf="(searchForm.get('max-car-battery')?.touched && searchForm.get('max-car-battery')?.dirty && searchForm.get('min-car-battery')?.touched && searchForm.get('min-car-battery')?.dirty) && searchForm.get('max-car-battery')?.value < searchForm.get('min-car-battery')?.value">
+            Min car battery > Max car battery
+          </div>
+          <div class="error" *ngIf="(searchForm.get('min-car-battery')?.dirty && searchForm.get('min-car-battery')?.touched) && searchForm.get('min-car-battery')?.value > 100">
+            Min car battery > 100
+          </div>
+          <div class="error" *ngIf="(searchForm.get('min-car-battery')?.dirty && searchForm.get('min-car-battery')?.touched) && searchForm.get('min-car-battery')?.value < 0">
+            Min car battery < 0
+          </div>
+          <div class="error" *ngIf="(searchForm.get('max-car-battery')?.dirty && searchForm.get('max-car-battery')?.touched) && searchForm.get('max-car-battery')?.value > 100">
+            Max car battery > 100
+          </div>
+          <div class="error" *ngIf="(searchForm.get('max-car-battery')?.dirty && searchForm.get('max-car-battery')?.touched) && searchForm.get('max-car-battery')?.value < 0">
+            Max car battery < 0
+          </div>
+        </div>
+        <div class="form-input">
+          <div>Car status: </div>
+          <div class="input-container">
+            <label class="container-custom-radio">Available
+              <input type="radio" id="available" formControlName="car-status" value="available">
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div class="input-container">
+            <label class="container-custom-radio">Unavailable
+              <input type="radio" id="unavailable" formControlName="car-status" value="unavailable">
+              <span class="checkmark"></span>
+            </label>
+          </div>
+        </div>
+        <div class="error" *ngIf="markers.length === 0">
+          Not found car
+        </div>
+        <div class="btn-search" (click)="search()">Search</div>
+        <div class="btn-reset" (click)="reset()">Reset</div>
+
+      </form>
+    </div>
+  <google-map
+    height="100vh"
+    width="100%"
+    [zoom]="zoom"
+    [center]="center">
+    <map-marker-clusterer [imagePath]="markerClustererImagePath">
+      <map-marker *ngFor="let marker of markers;"
+                  #markerElem = "mapMarker"
+                  (mapClick)="openInfo(markerElem, marker?.carInfo)"
+                  [position]="marker.position"
+                  [options]="marker.options">
+      </map-marker>
+    </map-marker-clusterer>
+    <map-info-window>
+      <div class="info-container">
+        <h3>{{ carContent?.name}}</h3>
+        <ul>
+          <li>Range: {{carContent?.rangeKm}}km</li>
+          <li>Battery: {{carContent?.batteryLevelPct}}%</li>
+          <li>Type: {{carContent?.type}}</li>
+          <li>Color: {{carContent?.color}}</li>
+        </ul>
+        <div *ngIf="carContent?.status === 'AVAILABLE'" class="btn-available">
+          AVAILABLE
+        </div>
+        <div *ngIf="carContent?.status !== 'AVAILABLE'" class="btn-unavailable">
+          UNAVAILABLE
+        </div>
+      </div>
+    </map-info-window>
+  </google-map>
+</div>
