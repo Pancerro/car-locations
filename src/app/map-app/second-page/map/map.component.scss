@@ -12,24 +12,24 @@
     cursor: pointer;
     filter: brightness(50%)
   }
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: 1400px) {
     .form-container {
-     width: 100% !important;
+      width: 25% !important;
     }
   }
-  @media only screen and (max-width: 900px) {
-    .form-container {
-      width: 40% !important;
-    }
-  }
-  @media only screen and (max-width: 1200px) {
+  @media only screen and (min-width: 901px) and (max-width: 1200px) {
     .form-container {
       width: 30% !important;
     }
   }
-  @media only screen and (max-width: 1400px) {
+  @media only screen and (min-width: 601px) and (max-width: 900px) {
     .form-container {
-      width: 25% !important;
+      width: 40% !important;
+    }
+  }
+  @media only screen and (max-width: 600px) {
+    .form-container {
+     width: 100% !important;
     }
   }
   .form-container {
